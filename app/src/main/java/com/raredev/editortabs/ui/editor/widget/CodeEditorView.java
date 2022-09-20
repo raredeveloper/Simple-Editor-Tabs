@@ -8,8 +8,6 @@ import com.raredev.editortabs.ui.editor.model.EditorTabsModel;
 import java.io.File;
 
 public class CodeEditorView extends ViewFlipper {
-    private Activity activity;
-    
     private EditorTabsModel mModel;
     private TabLayout mTabLayout;
     
@@ -42,6 +40,14 @@ public class CodeEditorView extends ViewFlipper {
             mTabLayout.removeTabAt(index);
             mModel.remove(index);
         } catch(Exception e) {}
+    }
+    
+    public void closeOthers(int index) {
+        for(int i = 0; i < mModel.getSize(); i++) {
+            if(index != i) {
+                closeFile(i);
+            }
+        }
     }
     
     public void closeAllFiles() {

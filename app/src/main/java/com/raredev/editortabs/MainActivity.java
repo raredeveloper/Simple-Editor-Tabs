@@ -76,10 +76,13 @@ public class MainActivity extends AppCompatActivity {
     private void showPopupMenu(View v, int index) {
         PopupMenu pm = new PopupMenu(this, v);
         pm.getMenu().add("Close");
+        pm.getMenu().add("Close Others");
         pm.getMenu().add("Close All");
         pm.setOnMenuItemClickListener(item -> {
             if (item.getTitle() == "Close") {
                 editor.closeFile(index);
+            } else if (item.getTitle() == "Close Others") {
+                editor.closeOthers(index);
             } else if (item.getTitle() == "Close All") {
                 editor.closeAllFiles();
             }
