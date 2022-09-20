@@ -2,19 +2,12 @@ package com.raredev.editortabs.ui.editor.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.util.AttributeSet;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
+import android.widget.ViewFlipper;
 import com.google.android.material.tabs.TabLayout;
-import com.raredev.editortabs.databinding.LayoutEditorBinding;
 import com.raredev.editortabs.ui.editor.model.EditorTabsModel;
-import com.raredev.editortabs.ui.editor.widget.VCSpaceEditor;
 import java.io.File;
 
-public class CodeEditorView extends LinearLayout {
+public class CodeEditorView extends ViewFlipper {
     private Activity activity;
     
     private EditorTabsModel mModel;
@@ -31,18 +24,21 @@ public class CodeEditorView extends LinearLayout {
     }
     
     public void openFile(File file) {
-        if(!mModel.containsFile(file)) {
-            addTab(mModel.getSize(), file);
+        if(mModel.containsFile(file)) {
+            for(int i = 0; i < mModel.getSize(); i++) {
+                final var tab = mTabLayout.getTabAt(i);
+                if (file.getAbsolutePath() == mModel.getFilePath(i) && tab != null && i >= 0 && !tab.isSelected()) {
+                    tab.select();
+                }
+            }
+            return;
         }
-    }
-    
-    public VCSpaceEditor getEditorWithTag(Object tag) {
-        return findViewWithTag(tag);
+        addTab(mModel.getSize(), file);
     }
     
     public void closeFile(int index) {
         try {
-            removeView(getEditorWithTag(mModel.getFilePath(index)));
+            removeView(getEditorAtIndex(index));
             mTabLayout.removeTabAt(index);
             mModel.remove(index);
         } catch(Exception e) {}
@@ -56,13 +52,21 @@ public class CodeEditorView extends LinearLayout {
         } catch(Exception e) {}
     }
     
+    public VCSpaceEditor getEditorAtIndex(int index) {
+        return (VCSpaceEditor)getChildAt(index);
+    }
+    
     private void addTab(int index, File file) {
         VCSpaceEditor editor = new VCSpaceEditor(getContext());
-        editor.setFile(file);
-        editor.setTag(file.getAbsolutePath());
-        addView(editor);
+        addView(editor, index);
         
         mTabLayout.addTab(mTabLayout.newTab().setText(file.getName()));
+        
+        final var tab = mTabLayout.getTabAt(index);
+        if (tab != null && index >= 0 && !tab.isSelected()) {
+            tab.select();
+        }
+        
         mModel.addFile(index, file);
     }
 }

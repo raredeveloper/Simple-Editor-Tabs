@@ -9,6 +9,7 @@ import com.raredev.editortabs.databinding.ActivityMainBinding;
 import com.itsaky.androidide.logsender.LogSender;
 import com.raredev.editortabs.ui.editor.widget.CodeEditorView;
 import java.io.File;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mBinding;
@@ -39,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab p1) {
                 try {
-                    var edit = editor.getEditorWithTag(editor.getTabsModel().getFilePath(p1.getPosition()));
-                    edit.setVisibility(View.GONE);
+                    //var edit = editor.getEditorWithTag(editor.getTabsModel().getFilePath(p1.getPosition()));
+                    
                 }catch(Exception e) {}
             }
             @Override
@@ -53,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab p1) {
                 currentTab = p1.getPosition();
                 try {
-                    var edit = editor.getEditorWithTag(editor.getTabsModel().getFilePath(p1.getPosition()));
-                    edit.setVisibility(View.VISIBLE);
+                    editor.setDisplayedChild(currentTab);
+                    var edit = editor.getEditorAtIndex(p1.getPosition());
+                    Objects.requireNonNull(edit);
                     edit.requestFocus();
                 } catch(Exception e) {}
             }
