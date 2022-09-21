@@ -8,6 +8,8 @@ import com.raredev.editortabs.ui.editor.model.EditorTabsModel;
 import java.io.File;
 
 public class CodeEditorView extends ViewFlipper {
+    private Activity activity;
+    
     private EditorTabsModel mModel;
     private TabLayout mTabLayout;
     
@@ -24,9 +26,8 @@ public class CodeEditorView extends ViewFlipper {
     public void openFile(File file) {
         if(mModel.containsFile(file)) {
             for(int i = 0; i < mModel.getSize(); i++) {
-                final var tab = mTabLayout.getTabAt(i);
-                if (file.getAbsolutePath() == mModel.getFilePath(i) && tab != null && i >= 0 && !tab.isSelected()) {
-                    tab.select();
+                if (file.getAbsolutePath().equals(mModel.getFilePath(i))) {
+                    setCurrentPosition(i);
                 }
             }
             return;
@@ -35,27 +36,38 @@ public class CodeEditorView extends ViewFlipper {
     }
     
     public void closeFile(int index) {
-        try {
+        File find = null;
+        for (File file : mModel.getFileList()) {
+            if (file.getAbsolutePath().equals(mModel.getFilePath(index))) {
+                find = file;
+            }
+        }
+        if(find != null) {
             removeView(getEditorAtIndex(index));
             mTabLayout.removeTabAt(index);
-            mModel.remove(index);
-        } catch(Exception e) {}
+            mModel.remove(find);
+        }
     }
     
     public void closeOthers(int index) {
-        for(int i = 0; i < mModel.getSize(); i++) {
-            if(index != i) {
-                closeFile(i);
+        File find = null;
+        for (File file : mModel.getFileList()) {
+            if (file.getAbsolutePath().equals(mModel.getFilePath(index))) {
+                find = file;
             }
+        }
+        if (find != null) {
+            mTabLayout.removeAllTabs();
+            removeAllViews();
+            mModel.clear();
+            openFile(find);
         }
     }
     
     public void closeAllFiles() {
-        try {
-            removeAllViews();
-            mTabLayout.removeAllTabs();
-            mModel.clear();
-        } catch(Exception e) {}
+        removeAllViews();
+        mTabLayout.removeAllTabs();
+        mModel.clear();
     }
     
     public VCSpaceEditor getEditorAtIndex(int index) {
@@ -66,13 +78,15 @@ public class CodeEditorView extends ViewFlipper {
         VCSpaceEditor editor = new VCSpaceEditor(getContext());
         addView(editor, index);
         
+        mModel.addFile(index, file);
         mTabLayout.addTab(mTabLayout.newTab().setText(file.getName()));
-        
+        setCurrentPosition(index);
+    }
+    
+    private void setCurrentPosition(int index) {
         final var tab = mTabLayout.getTabAt(index);
         if (tab != null && index >= 0 && !tab.isSelected()) {
             tab.select();
         }
-        
-        mModel.addFile(index, file);
     }
 }

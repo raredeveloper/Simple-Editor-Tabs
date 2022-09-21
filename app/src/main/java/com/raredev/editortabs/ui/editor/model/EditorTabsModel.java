@@ -26,7 +26,7 @@ public class EditorTabsModel {
         return mFiles.get(index).getAbsolutePath();
     }
     
-    public void remove(int index) {
+    public void remove(Object index) {
         mFiles.remove(index);
     }
     

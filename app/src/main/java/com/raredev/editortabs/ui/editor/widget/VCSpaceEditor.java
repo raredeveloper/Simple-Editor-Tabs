@@ -6,8 +6,6 @@ import io.github.rosemoe.sora.widget.CodeEditor;
 import java.io.File;
 
 public class VCSpaceEditor extends CodeEditor {
-    public static final String KEY_FILE = "editor_file";
-    
     private File file;
     
     public VCSpaceEditor(Context context) {
