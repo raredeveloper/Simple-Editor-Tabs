@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.ViewFlipper;
 import com.google.android.material.tabs.TabLayout;
 import com.raredev.editortabs.ui.editor.model.EditorTabsModel;
+import io.github.rosemoe.sora.widget.CodeEditor;
 import java.io.File;
 
 public class CodeEditorView extends ViewFlipper {
@@ -70,12 +71,12 @@ public class CodeEditorView extends ViewFlipper {
         mModel.clear();
     }
     
-    public VCSpaceEditor getEditorAtIndex(int index) {
-        return (VCSpaceEditor)getChildAt(index);
+    public CodeEditor getEditorAtIndex(int index) {
+        return (CodeEditor)getChildAt(index);
     }
     
     private void addTab(int index, File file) {
-        VCSpaceEditor editor = new VCSpaceEditor(getContext());
+        CodeEditor editor = new CodeEditor(getContext());
         addView(editor, index);
         
         mModel.addFile(index, file);

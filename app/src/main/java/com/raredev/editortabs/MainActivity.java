@@ -36,14 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private void configureTab() {
         mBinding.editorTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             int currentTab = -1;
+            @Override public void onTabUnselected(TabLayout.Tab p1) {}
             
-            @Override
-            public void onTabUnselected(TabLayout.Tab p1) {
-                try {
-                    //var edit = editor.getEditorWithTag(editor.getTabsModel().getFilePath(p1.getPosition()));
-                    
-                }catch(Exception e) {}
-            }
             @Override
             public void onTabReselected(TabLayout.Tab p1) {
                 showPopupMenu(p1.view, currentTab);
